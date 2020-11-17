@@ -11,8 +11,14 @@ const config = {
 
 const game = new Phaser.Game(config);
 
-function preload() {}
+function preload() {
+  this.load.image('background', 'assets/img/background.png');
+  this.load.image('player', 'assets/img/player.png');
+}
 
-function create() {}
+function create() {
+  this.add.image(400, 300, 'background');
+  this.add.image(400, 300, 'player');
+}
 
 function update() {}
