@@ -34,16 +34,16 @@ function create() {
   this.add.image(400, 300, 'background');
 
   platforms = this.physics.add.staticGroup();
-  // platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
-  //this.add.image(100, 300, 'player');
-  // this.add.spritesheet(300, 200, 'kiki-sprite');
-  // this.anims.create('run');
-  // this.anims.create('run', 30, true);
   player = this.physics.add.sprite(100, 50, 'kiki-sprite');
   player.setScale(1);
   player.setBounce(0.2);
   player.setCollideWorldBounds(true);
+
+  platforms.create(400, 568, 'platform').refreshBody();
+
+  platforms.create(400, 350, 'platform');
+  platforms.create(400, 150, 'platform');
 }
 
 function update() {}
