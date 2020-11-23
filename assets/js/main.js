@@ -20,6 +20,7 @@ const game = new Phaser.Game(config);
 
 function preload() {
   this.load.image('background', 'assets/img/background.png');
+  this.load.image('kitchen-on-top', 'assets/img/kitchen-on-top.png');
 
   this.load.spritesheet('kiki-sprite', 'assets/img/kiki-sprite.png', {
     frameWidth: 123,
@@ -31,25 +32,25 @@ function preload() {
 
 function create() {
   this.add.image(400, 300, 'background');
+  this.add.image(400, 300, 'kitchen-on-top');
 
   platforms = this.physics.add.staticGroup();
 
-  platforms.create(400, 568, 'platform').refreshBody();
-
   platforms.create(400, 350, 'platform');
-  platforms.create(400, 150, 'platform');
+  platforms.create(400, 200, 'platform');
 
   player = this.physics.add.sprite(100, 50, 'kiki-sprite');
 
   player.setScale(1);
   player.setBounce(0.2);
   player.setCollideWorldBounds(true);
+  player = this.player.animations.add('run');
 
   cursors = this.input.keyboard.createCursorKeys();
 
-  scoreText = this.add.text(16, 16, 'score: 0', {
-    fontSize: '32px',
-    fill: '#000',
+  scoreText = this.add.text(10, 16, '0', {
+    fontSize: '30px',
+    fill: '#88236D',
   });
 
   this.physics.add.collider(player, platforms);
@@ -58,12 +59,12 @@ function create() {
 }
 
 function update() {
-  if ((cursors.space.isDown || cursors.up.isDown) && player.body.onFloor()) {
+  if (cursors.up.isDown && player.body.onFloor()) {
     player.body.setVelocityY(-600); // jump up
   }
 
   function collectFood(player, food) {
-    star.disableBody(true, true);
+    food.disableBody(true, true);
 
     score += 10;
     scoreText.setText('Score: ' + score);
