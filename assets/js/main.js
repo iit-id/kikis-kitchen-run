@@ -25,7 +25,6 @@ function preload() {
   this.load.spritesheet('kiki-sprite', 'assets/img/kiki-sprite.png', {
     frameWidth: 123,
     frameHeight: 200,
-    frames: 5,
   });
 }
 
@@ -37,8 +36,8 @@ function create() {
 
   platforms = this.physics.add.staticGroup();
 
-  platforms.create(400, 350, 'platform');
-  platforms.create(400, 200, 'platform');
+  platforms.create(200, 350, 'platform');
+  platforms.create(200, 200, 'platform');
 
   this.scale.pageAlignHorizontally = true;
   this.scale.pageAlignVertically = true;
