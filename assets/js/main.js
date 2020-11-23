@@ -1,11 +1,11 @@
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  width: 900,
+  height: 565,
   physics: {
     default: 'arcade',
     arcade: {
-      gravity: { y: 300 },
+      gravity: { y: 450 },
       debug: false,
     },
   },
@@ -25,26 +25,29 @@ function preload() {
   this.load.spritesheet('kiki-sprite', 'assets/img/kiki-sprite.png', {
     frameWidth: 123,
     frameHeight: 200,
+    frames: 5,
   });
 }
 
 // const platforms;
 
 function create() {
-  this.add.image(400, 300, 'background');
-  this.add.image(400, 300, 'kitchen-on-top');
+  this.add.image(0, 0, 'background').setOrigin(0, 0);
+  this.add.image(0, 0, 'kitchen-on-top').setOrigin(0, 0);
 
   platforms = this.physics.add.staticGroup();
 
   platforms.create(400, 350, 'platform');
   platforms.create(400, 200, 'platform');
 
-  player = this.physics.add.sprite(100, 50, 'kiki-sprite');
+  this.scale.pageAlignHorizontally = true;
+  this.scale.pageAlignVertically = true;
 
-  player.setScale(1);
-  player.setBounce(0.2);
+  player = this.physics.add.sprite(200, 50, 'kiki-sprite');
+
+  player.setScale(0.75);
   player.setCollideWorldBounds(true);
-  player = this.player.animations.add('run');
+  // player = this.player.animations.add('run');
 
   cursors = this.input.keyboard.createCursorKeys();
 
