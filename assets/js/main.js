@@ -32,13 +32,13 @@ let platforms;
 let platformCollider;
 
 function create() {
-  this.add.image(0, 0, 'background').setOrigin(0, 0);
-  this.add.image(0, 0, 'kitchen-on-top').setOrigin(0, 0);
-
   platforms = this.physics.add.staticGroup();
 
-  platforms.create(200, 350, 'platform');
-  platforms.create(200, 200, 'platform');
+  platforms.create(200, 360, 'platform');
+  platforms.create(200, 170, 'platform');
+
+  this.add.image(0, 0, 'background').setOrigin(0, 0);
+  this.add.image(0, 0, 'kitchen-on-top').setOrigin(0, 0);
 
   this.scale.pageAlignHorizontally = true;
   this.scale.pageAlignVertically = true;
@@ -73,11 +73,15 @@ function create() {
 
 function update() {
   if (cursors.up.isDown && player.body.onFloor()) {
+    platformCollider.active = false;
     player.body.setVelocityY(-600); // jump up
+    setTimeout(() => {
+      platformCollider.active = true;
+    }, 100);
   }
   if (cursors.down.isDown && player.body.onFloor()) {
     platformCollider.active = false;
-    player.body.setVelocityY(600); // jump up
+    player.body.setVelocityY(600); // jump down
     setTimeout(() => {
       platformCollider.active = true;
     }, 100);
