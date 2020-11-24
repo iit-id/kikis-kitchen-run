@@ -28,7 +28,8 @@ function preload() {
   });
 }
 
-// const platforms;
+let platforms;
+let platformCollider;
 
 function create() {
   this.add.image(0, 0, 'background').setOrigin(0, 0);
@@ -48,6 +49,16 @@ function create() {
   player.setCollideWorldBounds(true);
   // player = this.player.animations.add('run');
 
+  this.anims.create({
+    key: 'run',
+    frames: this.anims.generateFrameNumbers('kiki-sprite', {
+      start: 0,
+      end: 5,
+    }),
+    frameRate: 10,
+    repeat: -1,
+  });
+
   cursors = this.input.keyboard.createCursorKeys();
 
   scoreText = this.add.text(10, 16, '0', {
@@ -55,7 +66,7 @@ function create() {
     fill: '#88236D',
   });
 
-  this.physics.add.collider(player, platforms);
+  platformCollider = this.physics.add.collider(player, platforms);
 
   player.body.setGravityY(300);
 }
@@ -64,11 +75,20 @@ function update() {
   if (cursors.up.isDown && player.body.onFloor()) {
     player.body.setVelocityY(-600); // jump up
   }
-
-  function collectFood(player, food) {
-    food.disableBody(true, true);
-
-    score += 10;
-    scoreText.setText('Score: ' + score);
+  if (cursors.down.isDown && player.body.onFloor()) {
+    platformCollider.active = false;
+    player.body.setVelocityY(600); // jump up
+    setTimeout(() => {
+      platformCollider.active = true;
+    }, 100);
   }
+
+  player.anims.play('run', true);
+}
+
+function collectFood(player, food) {
+  food.disableBody(true, true);
+
+  score += 10;
+  scoreText.setText('Score: ' + score);
 }
