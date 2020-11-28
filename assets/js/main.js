@@ -1,7 +1,7 @@
 const config = {
   type: Phaser.AUTO,
   width: 900,
-  height: 565,
+  height: 555,
   physics: {
     default: 'arcade',
     arcade: {
@@ -21,6 +21,7 @@ const game = new Phaser.Game(config);
 function preload() {
   this.load.image('background', 'assets/img/background.png');
   this.load.image('kitchen-on-top', 'assets/img/kitchen-on-top.png');
+  this.load.image('platform', 'assets/img/platform.png');
 
   this.load.spritesheet('kiki-sprite', 'assets/img/kiki-sprite.png', {
     frameWidth: 123,
@@ -34,20 +35,21 @@ let platformCollider;
 function create() {
   platforms = this.physics.add.staticGroup();
 
-  platforms.create(200, 360, 'platform');
-  platforms.create(200, 170, 'platform');
+  platforms.create(200, 340, 'platform');
+  platforms.create(200, 180, 'platform');
 
-  this.add.image(0, 0, 'background').setOrigin(0, 0);
-  this.add.image(0, 0, 'kitchen-on-top').setOrigin(0, 0);
+  this.background1 = this.add
+    .tileSprite(0, 0, 900, 900, 'background')
+    .setOrigin(0, 0);
 
-  this.scale.pageAlignHorizontally = true;
-  this.scale.pageAlignVertically = true;
+  this.background2 = this.add
+    .tileSprite(0, 0, 900, 900, 'kitchen-on-top')
+    .setOrigin(0, 0);
 
   player = this.physics.add.sprite(200, 50, 'kiki-sprite');
 
   player.setScale(0.75);
   player.setCollideWorldBounds(true);
-  // player = this.player.animations.add('run');
 
   this.anims.create({
     key: 'run',
@@ -72,6 +74,9 @@ function create() {
 }
 
 function update() {
+  this.background1.tilePositionX += 5;
+  this.background2.tilePositionX += 5;
+
   if (cursors.up.isDown && player.body.onFloor()) {
     platformCollider.active = false;
     player.body.setVelocityY(-600); // jump up
