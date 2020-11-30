@@ -27,10 +27,17 @@ function preload() {
     frameWidth: 123,
     frameHeight: 200,
   });
+
+  this.load.image('apple', 'assets/img/apple.png');
+  this.load.image('cheese', 'assets/img/cheese.png');
+  this.load.image('cupcake', 'assets/img/cupcake.png');
+  this.load.image('pizza', 'assets/img/pizza.png');
+  this.load.image('sushi', 'assets/img/sushi.png');
 }
 
 let platforms;
 let platformCollider;
+let food;
 
 function create() {
   platforms = this.physics.add.staticGroup();
@@ -45,6 +52,13 @@ function create() {
   this.background2 = this.add
     .tileSprite(0, 0, 900, 900, 'kitchen-on-top')
     .setOrigin(0, 0);
+
+  // this.food = this.physics.add.group();
+  // this.food.add(this.pizza);
+  // this.food.add(this.cupcake);
+  // this.food.add(this.sushi);
+  // this.food.add(this.cheese);
+  // this.food.add(this.apple);
 
   player = this.physics.add.sprite(200, 50, 'kiki-sprite');
 
@@ -71,6 +85,21 @@ function create() {
   platformCollider = this.physics.add.collider(player, platforms);
 
   player.body.setGravityY(300);
+
+  // let food = this.game.rnd.integerInRange(0, 5);
+  // let food;
+
+  // food = this.physics.add.group({
+  //   key: 'cupcake',
+  //   key: 'pizza',
+  //   setXY: {
+  //     x: 900,
+  //     y: 130,
+  //     stepX: 70,
+  //   },
+  // });
+
+  this.physics.add.overlap(player, food, null, this);
 }
 
 function update() {
