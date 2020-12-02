@@ -89,15 +89,14 @@ function create() {
   // let food = this.game.rnd.integerInRange(0, 5);
   // let food;
 
-  // food = this.physics.add.group({
-  //   key: 'cupcake',
-  //   key: 'pizza',
-  //   setXY: {
-  //     x: 900,
-  //     y: 130,
-  //     stepX: 70,
-  //   },
-  // });
+  this.food = this.add.group({
+    key: 'cupcake',
+    setXY: {
+      x: 1000,
+      y: 500,
+      stepX: 70,
+    },
+  });
 
   this.physics.add.overlap(player, food, null, this);
 }
@@ -105,6 +104,7 @@ function create() {
 function update() {
   this.background1.tilePositionX += 5;
   this.background2.tilePositionX += 5;
+  this.food.incX(-5);
 
   if (cursors.up.isDown && player.body.onFloor()) {
     platformCollider.active = false;
