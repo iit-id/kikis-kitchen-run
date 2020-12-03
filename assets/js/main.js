@@ -5,7 +5,7 @@ const config = {
   physics: {
     default: 'arcade',
     arcade: {
-      gravity: { y: 450 },
+      gravity: { y: 0 },
       debug: false,
     },
   },
@@ -53,17 +53,20 @@ function create() {
     .tileSprite(0, 0, 900, 900, 'kitchen-on-top')
     .setOrigin(0, 0);
 
-  // this.food = this.physics.add.group();
-  // this.food.add(this.pizza);
-  // this.food.add(this.cupcake);
-  // this.food.add(this.sushi);
-  // this.food.add(this.cheese);
-  // this.food.add(this.apple);
-
   player = this.physics.add.sprite(200, 50, 'kiki-sprite');
 
   player.setScale(0.75);
   player.setCollideWorldBounds(true);
+
+  this.anims.create({
+    key: 'run',
+    frames: this.anims.generateFrameNumbers('kiki-sprite', {
+      start: 0,
+      end: 5,
+    }),
+    frameRate: 10,
+    repeat: -1,
+  });
 
   this.anims.create({
     key: 'run',
@@ -86,29 +89,48 @@ function create() {
 
   player.body.setGravityY(300);
 
-  // let food = this.game.rnd.integerInRange(0, 5);
-  // let food;
+  this.platformHeights = [130, 280, 500];
 
-  this.food = this.add.group({
-    key: 'cupcake',
-    setXY: {
-      x: 1000,
-      y: 500,
-      stepX: 70,
-    },
-  });
+  this.foodlist = [
+    this.physics.add.group({
+      key: 'pizza',
+      setXY: {
+        x: 800,
+        y: this.platformHeights[
+          Math.floor(Math.random() * this.platformHeights.length)
+        ],
+        stepX: 70,
+      },
+    }),
 
-  this.physics.add.overlap(player, food, null, this);
+    this.physics.add.group({
+      key: 'cupcake',
+      setXY: {
+        x: 2000,
+        y: this.platformHeights[
+          Math.floor(Math.random() * this.platformHeights.length)
+        ],
+        stepX: 70,
+      },
+    }),
+  ];
+
+  for (i = 0; i < this.foodlist.length; i++) {
+    this.physics.add.overlap(player, this.foodlist[i], collectFood, null, this);
+  }
 }
 
 function update() {
   this.background1.tilePositionX += 5;
   this.background2.tilePositionX += 5;
-  this.food.incX(-5);
+  for (i = 0; i < this.foodlist.length; i++) {
+    this.foodlist[i].incX(-5);
+    // console.log(this.foodlist[i])
+  }
 
   if (cursors.up.isDown && player.body.onFloor()) {
     platformCollider.active = false;
-    player.body.setVelocityY(-600); // jump up
+    player.body.setVelocityY(-800); // jump up
     setTimeout(() => {
       platformCollider.active = true;
     }, 100);
