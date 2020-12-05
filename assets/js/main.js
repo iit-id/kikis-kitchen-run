@@ -38,6 +38,10 @@ function preload() {
 let platforms;
 let platformCollider;
 let food;
+let player;
+let foodlist;
+let score = 0;
+let scoreText;
 
 function create() {
   platforms = this.physics.add.staticGroup();
@@ -57,16 +61,6 @@ function create() {
 
   player.setScale(0.75);
   player.setCollideWorldBounds(true);
-
-  this.anims.create({
-    key: 'run',
-    frames: this.anims.generateFrameNumbers('kiki-sprite', {
-      start: 0,
-      end: 5,
-    }),
-    frameRate: 10,
-    repeat: -1,
-  });
 
   this.anims.create({
     key: 'run',
@@ -113,18 +107,55 @@ function create() {
         stepX: 70,
       },
     }),
+
+    this.physics.add.group({
+      key: 'sushi',
+      setXY: {
+        x: 1000,
+        y: this.platformHeights[
+          Math.floor(Math.random() * this.platformHeights.length)
+        ],
+        stepX: 70,
+      },
+    }),
+
+    this.physics.add.group({
+      key: 'apple',
+      setXY: {
+        x: 2500,
+        y: this.platformHeights[
+          Math.floor(Math.random() * this.platformHeights.length)
+        ],
+        stepX: 70,
+      },
+    }),
+
+    this.physics.add.group({
+      key: 'cheese',
+      setXY: {
+        x: 3000,
+        y: this.platformHeights[
+          Math.floor(Math.random() * this.platformHeights.length)
+        ],
+        stepX: 70,
+      },
+    }),
   ];
 
   for (i = 0; i < this.foodlist.length; i++) {
     this.physics.add.overlap(player, this.foodlist[i], collectFood, null, this);
   }
+
+  console.log(this.foodlist[0].getFirst());
 }
 
 function update() {
   this.background1.tilePositionX += 5;
   this.background2.tilePositionX += 5;
+
   for (i = 0; i < this.foodlist.length; i++) {
     this.foodlist[i].incX(-5);
+    // console.log(this.foodlist[i].position);
     // console.log(this.foodlist[i])
   }
 
@@ -150,5 +181,5 @@ function collectFood(player, food) {
   food.disableBody(true, true);
 
   score += 10;
-  scoreText.setText('Score: ' + score);
+  scoreText.setText(score);
 }
