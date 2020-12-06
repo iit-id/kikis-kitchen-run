@@ -19,6 +19,7 @@ const config = {
 const game = new Phaser.Game(config);
 
 function preload() {
+  game.paused = false;
   this.load.image('background', 'assets/img/background.png');
   this.load.image('kitchen-on-top', 'assets/img/kitchen-on-top.png');
   this.load.image('platform', 'assets/img/platform.png');
@@ -33,6 +34,7 @@ function preload() {
   this.load.image('cupcake', 'assets/img/cupcake.png');
   this.load.image('pizza', 'assets/img/pizza.png');
   this.load.image('sushi', 'assets/img/sushi.png');
+  this.load.image('moldybread', 'assets/img/moldybread.png');
 }
 
 let platforms;
@@ -42,6 +44,9 @@ let player;
 let foodlist;
 let score = 0;
 let scoreText;
+let moldyBread;
+let gameOver;
+let gameoverText;
 
 function create() {
   platforms = this.physics.add.staticGroup();
@@ -79,6 +84,11 @@ function create() {
     fill: '#88236D',
   });
 
+  gameoverText = this.add.text(250, 200, '', {
+    fontSize: '100px',
+    fill: '#F63E17',
+  });
+
   platformCollider = this.physics.add.collider(player, platforms);
 
   player.body.setGravityY(300);
@@ -86,6 +96,17 @@ function create() {
   this.platformHeights = [130, 280, 500];
 
   this.foodlist = [
+    this.physics.add.group({
+      key: 'moldybread',
+      setXY: {
+        x: 800,
+        y: this.platformHeights[
+          Math.floor(Math.random() * this.platformHeights.length)
+        ],
+        stepX: 70,
+      },
+    }),
+
     this.physics.add.group({
       key: 'pizza',
       setXY: {
@@ -143,13 +164,24 @@ function create() {
   ];
 
   for (i = 0; i < this.foodlist.length; i++) {
+    if (i == 0) {
+      this.physics.add.overlap(
+        player,
+        this.foodlist[i],
+        collectMold,
+        null,
+        this
+      );
+    }
     this.physics.add.overlap(player, this.foodlist[i], collectFood, null, this);
   }
-
-  console.log(this.foodlist[0].getFirst());
 }
 
 function update() {
+  if (gameOver) {
+    return;
+  }
+
   this.background1.tilePositionX += 5;
   this.background2.tilePositionX += 5;
 
@@ -175,6 +207,25 @@ function update() {
   }
 
   player.anims.play('run', true);
+
+  // this.foodlist[i].children.iterate(function (child, index){
+  //   child.scrollX += 2.5 + Math.sin((0.01 * index) * delta);
+  //   if (child.scrollX > 900)
+  //   {
+  //     child.scrollX = -200;
+  //   }
+  // });
+
+  //   if(this.player.alive && !this.stopped) {
+  //     if(!this.wrapping && this.player.x < this.game.width) {
+
+  //       this.wrapping = true;
+  //       this.game.world.bringToTop
+  //     }
+  //     else if(this.player.x >=this.game.width){
+  //       this.wrapping = false;
+  //     }
+  //   }
 }
 
 function collectFood(player, food) {
@@ -182,4 +233,21 @@ function collectFood(player, food) {
 
   score += 10;
   scoreText.setText(score);
+
+  // if (x = 50) {
+  //   gameOver = true;
+  // }
 }
+
+function collectMold(player, food) {
+  food.disableBody(true, true);
+
+  gameoverText.setText('Game Over');
+
+  game.paused = true;
+  gameOver = true;
+
+  // this.player.anims.play('run', 1, true);
+}
+
+// if food passes x: 50, game over
