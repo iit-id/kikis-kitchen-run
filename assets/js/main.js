@@ -35,6 +35,7 @@ function preload() {
   this.load.image('pizza', 'assets/img/pizza.png');
   this.load.image('sushi', 'assets/img/sushi.png');
   this.load.image('moldybread', 'assets/img/moldybread.png');
+  this.load.audio('music', ['assets/audio/music.mp3']);
   this.load.audio('munch', ['assets/audio/munch.mp3']);
   this.load.audio('leveldown', ['assets/audio/leveldown.mp3']);
 }
@@ -102,7 +103,7 @@ function create() {
     this.physics.add.group({
       key: 'moldybread',
       setXY: {
-        x: 800,
+        x: 2800,
         y: this.platformHeights[
           Math.floor(Math.random() * this.platformHeights.length)
         ],
@@ -168,6 +169,8 @@ function create() {
 
   munch = this.sound.add('munch');
   leveldown = this.sound.add('leveldown');
+  music = this.sound.add('music');
+  music.play();
 
   for (i = 0; i < this.foodlist.length; i++) {
     if (i == 0) {
