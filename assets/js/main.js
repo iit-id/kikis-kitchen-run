@@ -35,6 +35,8 @@ function preload() {
   this.load.image('pizza', 'assets/img/pizza.png');
   this.load.image('sushi', 'assets/img/sushi.png');
   this.load.image('moldybread', 'assets/img/moldybread.png');
+  this.load.audio('munch', ['assets/audio/munch.mp3']);
+  this.load.audio('leveldown', ['assets/audio/leveldown.mp3']);
 }
 
 let platforms;
@@ -47,6 +49,7 @@ let scoreText;
 let moldyBread;
 let gameOver;
 let gameoverText;
+let addFood;
 
 function create() {
   platforms = this.physics.add.staticGroup();
@@ -163,6 +166,9 @@ function create() {
     }),
   ];
 
+  munch = this.sound.add('munch');
+  leveldown = this.sound.add('leveldown');
+
   for (i = 0; i < this.foodlist.length; i++) {
     if (i == 0) {
       this.physics.add.overlap(
@@ -229,14 +235,12 @@ function update() {
 }
 
 function collectFood(player, food) {
+  munch.play();
+
   food.disableBody(true, true);
 
   score += 10;
   scoreText.setText(score);
-
-  // if (x = 50) {
-  //   gameOver = true;
-  // }
 }
 
 function collectMold(player, food) {
@@ -247,7 +251,22 @@ function collectMold(player, food) {
   game.paused = true;
   gameOver = true;
 
+  leveldown.play();
+
   // this.player.anims.play('run', 1, true);
 }
 
 // if food passes x: 50, game over
+
+// function addFood(x, y) {
+//   // get a food that is not currently on screen
+//   var food = this.foodlist.getFirstDead();
+
+//   //Reset it to specific coordinates
+//   food.reset(x, y);
+//   food.body.immovable = true;
+
+//   //When the tile leaves the screen, kill it
+//   food.checkWorldBounds = true;
+//   food.outOfBoundsKill = true;
+// }
