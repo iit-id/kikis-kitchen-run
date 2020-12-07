@@ -2,6 +2,7 @@ const config = {
   type: Phaser.AUTO,
   width: 900,
   height: 555,
+  autoCenter: true,
   physics: {
     default: 'arcade',
     arcade: {
@@ -36,7 +37,7 @@ function preload() {
   this.load.image('sushi', 'assets/img/sushi.png');
   this.load.image('moldybread', 'assets/img/moldybread.png');
   this.load.audio('music', ['assets/audio/music.mp3']);
-  this.load.audio('munch', ['assets/audio/munch.mp3']);
+  this.load.audio('getpoints', ['assets/audio/getpoints.mp3']);
   this.load.audio('leveldown', ['assets/audio/leveldown.mp3']);
 }
 
@@ -50,7 +51,6 @@ let scoreText;
 let moldyBread;
 let gameOver;
 let gameoverText;
-let addFood;
 
 function create() {
   platforms = this.physics.add.staticGroup();
@@ -88,9 +88,9 @@ function create() {
     fill: '#88236D',
   });
 
-  gameoverText = this.add.text(250, 200, '', {
+  gameoverText = this.add.text(175, 200, '', {
     fontSize: '100px',
-    fill: '#F63E17',
+    fill: '#FF0000',
   });
 
   platformCollider = this.physics.add.collider(player, platforms);
@@ -167,7 +167,7 @@ function create() {
     }),
   ];
 
-  munch = this.sound.add('munch');
+  getpoints = this.sound.add('getpoints');
   leveldown = this.sound.add('leveldown');
   music = this.sound.add('music');
   music.play();
@@ -196,8 +196,14 @@ function update() {
 
   for (i = 0; i < this.foodlist.length; i++) {
     this.foodlist[i].incX(-5);
-    // console.log(this.foodlist[i].position);
-    // console.log(this.foodlist[i])
+    // var item = this.foodlist[i].getFirstDead();
+    var item = this.foodlist[i].children;
+
+    if (item) {
+      item.checkWorldBounds = true;
+      item.outOfBoundsKill = true;
+      // item.reset(450, 250);
+    }
   }
 
   if (cursors.up.isDown && player.body.onFloor()) {
@@ -238,7 +244,7 @@ function update() {
 }
 
 function collectFood(player, food) {
-  munch.play();
+  getpoints.play();
 
   food.disableBody(true, true);
 
