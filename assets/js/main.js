@@ -83,7 +83,7 @@ function create() {
 
   cursors = this.input.keyboard.createCursorKeys();
 
-  scoreText = this.add.text(10, 16, '0', {
+  scoreText = this.add.text(850, 16, '0', {
     fontSize: '30px',
     fill: '#88236D',
   });
@@ -196,13 +196,11 @@ function update() {
 
   for (i = 0; i < this.foodlist.length; i++) {
     this.foodlist[i].incX(-5);
-    // var item = this.foodlist[i].getFirstDead();
     var item = this.foodlist[i].children;
 
     if (item) {
       item.checkWorldBounds = true;
       item.outOfBoundsKill = true;
-      // item.reset(450, 250);
     }
   }
 
@@ -222,25 +220,6 @@ function update() {
   }
 
   player.anims.play('run', true);
-
-  // this.foodlist[i].children.iterate(function (child, index){
-  //   child.scrollX += 2.5 + Math.sin((0.01 * index) * delta);
-  //   if (child.scrollX > 900)
-  //   {
-  //     child.scrollX = -200;
-  //   }
-  // });
-
-  //   if(this.player.alive && !this.stopped) {
-  //     if(!this.wrapping && this.player.x < this.game.width) {
-
-  //       this.wrapping = true;
-  //       this.game.world.bringToTop
-  //     }
-  //     else if(this.player.x >=this.game.width){
-  //       this.wrapping = false;
-  //     }
-  //   }
 }
 
 function collectFood(player, food) {
@@ -261,21 +240,4 @@ function collectMold(player, food) {
   gameOver = true;
 
   leveldown.play();
-
-  // this.player.anims.play('run', 1, true);
 }
-
-// if food passes x: 50, game over
-
-// function addFood(x, y) {
-//   // get a food that is not currently on screen
-//   var food = this.foodlist.getFirstDead();
-
-//   //Reset it to specific coordinates
-//   food.reset(x, y);
-//   food.body.immovable = true;
-
-//   //When the tile leaves the screen, kill it
-//   food.checkWorldBounds = true;
-//   food.outOfBoundsKill = true;
-// }
