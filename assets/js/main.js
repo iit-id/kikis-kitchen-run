@@ -2,7 +2,7 @@ const config = {
   type: Phaser.AUTO,
   width: 900,
   height: 555,
-  autoCenter: true,
+  // autoCenter: true,
   physics: {
     default: 'arcade',
     arcade: {
@@ -41,9 +41,11 @@ function preload() {
   this.load.audio('leveldown', ['assets/audio/leveldown.mp3']);
 }
 
+const platformHeights = [130, 280, 500];
+
 let platforms;
 let platformCollider;
-let food;
+let item;
 let player;
 let foodlist;
 let score = 0;
@@ -97,93 +99,23 @@ function create() {
 
   player.body.setGravityY(300);
 
-  this.platformHeights = [130, 280, 500];
+  this.items = this.physics.add.group();
+  this.items.create(-100, -100, 'moldybread');
+  this.items.create(-100, -100, 'pizza');
+  this.items.create(-100, -100, 'cupcake');
+  this.items.create(-100, -100, 'sushi');
+  this.items.create(-100, -100, 'apple');
+  this.items.create(-100, -100, 'cheese');
+  this.physics.add.overlap(player, this.items, collectItem);
 
-  this.foodlist = [
-    this.physics.add.group({
-      key: 'moldybread',
-      setXY: {
-        x: 2800,
-        y: this.platformHeights[
-          Math.floor(Math.random() * this.platformHeights.length)
-        ],
-        stepX: 70,
-      },
-    }),
-
-    this.physics.add.group({
-      key: 'pizza',
-      setXY: {
-        x: 800,
-        y: this.platformHeights[
-          Math.floor(Math.random() * this.platformHeights.length)
-        ],
-        stepX: 70,
-      },
-    }),
-
-    this.physics.add.group({
-      key: 'cupcake',
-      setXY: {
-        x: 2000,
-        y: this.platformHeights[
-          Math.floor(Math.random() * this.platformHeights.length)
-        ],
-        stepX: 70,
-      },
-    }),
-
-    this.physics.add.group({
-      key: 'sushi',
-      setXY: {
-        x: 1000,
-        y: this.platformHeights[
-          Math.floor(Math.random() * this.platformHeights.length)
-        ],
-        stepX: 70,
-      },
-    }),
-
-    this.physics.add.group({
-      key: 'apple',
-      setXY: {
-        x: 2500,
-        y: this.platformHeights[
-          Math.floor(Math.random() * this.platformHeights.length)
-        ],
-        stepX: 70,
-      },
-    }),
-
-    this.physics.add.group({
-      key: 'cheese',
-      setXY: {
-        x: 3000,
-        y: this.platformHeights[
-          Math.floor(Math.random() * this.platformHeights.length)
-        ],
-        stepX: 70,
-      },
-    }),
-  ];
+  this.items.children.entries.forEach((item) => {
+    resetLocation(item);
+  });
 
   getpoints = this.sound.add('getpoints');
   leveldown = this.sound.add('leveldown');
   music = this.sound.add('music');
   music.play();
-
-  for (i = 0; i < this.foodlist.length; i++) {
-    if (i == 0) {
-      this.physics.add.overlap(
-        player,
-        this.foodlist[i],
-        collectMold,
-        null,
-        this
-      );
-    }
-    this.physics.add.overlap(player, this.foodlist[i], collectFood, null, this);
-  }
 }
 
 function update() {
@@ -191,18 +123,19 @@ function update() {
     return;
   }
 
+  // Move background
   this.background1.tilePositionX += 5;
   this.background2.tilePositionX += 5;
 
-  for (i = 0; i < this.foodlist.length; i++) {
-    this.foodlist[i].incX(-5);
-    var item = this.foodlist[i].children;
+  this.items.children.entries.forEach((item) => {
+    // Move items
+    item.x -= 5;
 
-    if (item) {
-      item.checkWorldBounds = true;
-      item.outOfBoundsKill = true;
+    // Warp items to new location if off screen
+    if (item.x < 0) {
+      resetLocation(item);
     }
-  }
+  });
 
   if (cursors.up.isDown && player.body.onFloor()) {
     platformCollider.active = false;
@@ -222,22 +155,30 @@ function update() {
   player.anims.play('run', true);
 }
 
-function collectFood(player, food) {
-  getpoints.play();
-
-  food.disableBody(true, true);
-
-  score += 10;
-  scoreText.setText(score);
+function resetLocation(object) {
+  object.x = Phaser.Math.Between(config.width, config.width * 4);
+  object.y = platformHeights[Phaser.Math.Between(0, 2)];
 }
 
-function collectMold(player, food) {
-  food.disableBody(true, true);
+function collectItem(player, item) {
+  const key = item.texture.key;
 
-  gameoverText.setText('Game Over');
+  if (key === 'moldybread') {
+    item.disableBody(true, true);
 
-  game.paused = true;
-  gameOver = true;
+    gameoverText.setText('Game Over');
+    player.anims.stop();
 
-  leveldown.play();
+    game.paused = true;
+    gameOver = true;
+
+    leveldown.play();
+  } else {
+    getpoints.play();
+
+    resetLocation(item);
+
+    score += 10;
+    scoreText.setText(score);
+  }
 }
