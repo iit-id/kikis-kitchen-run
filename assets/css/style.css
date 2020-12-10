@@ -1,5 +1,12 @@
+h1 {
+  display: block;
+  text-align: center;
+  font-family: 'Comfortaa', cursive;
+  font-size: 40px;
+  color: #88236d;
+}
+
 body {
-  margin: auto;
-  padding: 20px;
-  background-color: #eefbfb;
+  text-align: center;
+  background-color: #bfefff;
 }

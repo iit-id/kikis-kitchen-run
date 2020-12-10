@@ -2,7 +2,6 @@ const config = {
   type: Phaser.AUTO,
   width: 900,
   height: 555,
-  // autoCenter: true,
   physics: {
     default: 'arcade',
     arcade: {
@@ -85,16 +84,6 @@ function create() {
 
   cursors = this.input.keyboard.createCursorKeys();
 
-  scoreText = this.add.text(850, 16, '0', {
-    fontSize: '30px',
-    fill: '#88236D',
-  });
-
-  gameoverText = this.add.text(175, 200, '', {
-    fontSize: '100px',
-    fill: '#FF0000',
-  });
-
   platformCollider = this.physics.add.collider(player, platforms);
 
   player.body.setGravityY(300);
@@ -116,6 +105,28 @@ function create() {
   leveldown = this.sound.add('leveldown');
   music = this.sound.add('music');
   music.play();
+
+  scoreText = this.add.text(840, 16, '0', {
+    fontFamily: 'Comfortaa',
+    fontSize: '30px',
+    fill: '#88236D',
+  });
+
+  gameoverText = this.add.text(175, 200, '', {
+    fontFamily: 'Comfortaa',
+    fontSize: '100px',
+    fill: '#88236D',
+    stroke: '#000',
+    strokeThickness: 1,
+    shadow: {
+      offsetX: 2,
+      offsetY: 2,
+      color: '#A9A9A9',
+      blur: 2,
+      stroke: true,
+      fill: true,
+    },
+  });
 }
 
 function update() {
